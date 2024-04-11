@@ -30,11 +30,12 @@ func InitStartBlock(db *db.DB, l1 config.L1Config) error {
 		// no need to resolve start block, it's already been set
 		return nil
 	}
-	log.Info("starting search for start block of contract ", l1.CDKValidiumAddress)
+	log.Infof("starting search for start block of contract: %s", l1.CDKValidiumAddress)
 	startBlock, err := findContractDeploymentBlock(ctx, l1.RpcURL, common.HexToAddress(l1.CDKValidiumAddress))
 	if err != nil {
 		return err
 	}
+	log.Infof("startBlock: %s", startBlock.String())
 	err = setStartBlock(db, startBlock.Uint64())
 	if err != nil {
 		return err
@@ -47,11 +48,14 @@ func findContractDeploymentBlock(ctx context.Context, url string, contract commo
 	if err != nil {
 		return nil, err
 	}
-	latestBlock, err := eth.BlockByNumber(ctx, nil)
+	log.Infof("eth client: %s", url)
+	latestBlock, err := eth.HeaderByNumber(ctx, nil)
 	if err != nil {
+		log.Info("BlockByNumber error")
 		return nil, err
 	}
-	firstBlock := findCode(ctx, eth, contract, 0, latestBlock.Number().Int64())
+	log.Infof("latestBlock: %d", latestBlock.Number.Int64())
+	firstBlock := findCode(ctx, eth, contract, 0, latestBlock.Number.Int64())
 	return big.NewInt(firstBlock), nil
 }
 
