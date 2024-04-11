@@ -10,4 +10,6 @@ type Config struct {
 	Level string `mapstructure:"Level" jsonschema:"enum=debug,enum=info,enum=warn,enum=error,enum=dpanic,enum=panic,enum=fatal"`
 	// Outputs
 	Outputs []string `mapstructure:"Outputs"`
+	// Log file
+	File string `mapstructure:"File"`
 }
