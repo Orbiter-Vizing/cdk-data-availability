@@ -40,9 +40,9 @@ type Etherman struct {
 func New(cfg config.L1Config) (*Etherman, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), cfg.Timeout.Duration)
 	defer cancel()
-	ethClient, err := ethclient.DialContext(ctx, cfg.WsURL)
+	ethClient, err := ethclient.DialContext(ctx, cfg.RpcURL)
 	if err != nil {
-		log.Errorf("error connecting to %s: %+v", cfg.WsURL, err)
+		log.Errorf("error connecting to %s: %+v", cfg.RpcURL, err)
 		return nil, err
 	}
 	cdkValidium, err := cdkvalidium.NewCdkvalidium(common.HexToAddress(cfg.CDKValidiumAddress), ethClient)
